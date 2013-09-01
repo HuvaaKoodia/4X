@@ -1,0 +1,21 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\NGUI\Scripts\Interaction\UIDraggablePanel.cs">
+    <Files>
+      <File FileName="Assets\Game\Data\ShipData.cs" Line="125" Column="30" />
+      <File FileName="Assets\Game\Data\ColonyData.cs" Line="21" Column="22" />
+      <File FileName="Assets\Game\Menus\MenuMain.cs" Line="18" Column="28" />
+      <File FileName="Assets\ShipItem.cs" Line="25" Column="25" />
+      <File FileName="Assets\Game\Sys\GameController.cs" Line="36" Column="8" />
+      <File FileName="Assets\Graphics\UnlitAlphaColor.shader" Line="25" Column="17" />
+      <File FileName="Assets\ShipPanel.cs" Line="55" Column="25" />
+      <File FileName="Assets\NGUI\Scripts\Interaction\UIDraggablePanel.cs" Line="303" Column="5" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="D:\User\coding\unityworks\Connections\Assets\NGUI\Scripts\Interaction\UIGrid.cs" line="85" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
