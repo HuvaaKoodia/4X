@@ -19,12 +19,6 @@ public class NodeMain : MonoBehaviour {
 		
 	}
 	
-	void OnGUI(){
-		foreach(var n in links){
-			Drawing.DrawLine3D(Camera.main,transform.position,n.transform.position,Color.green,5f);
-		}
-	}
-	
 	public void ChangeColor(Color c){
 		Subs.ChangeColor(graphics.transform,c);
 	}

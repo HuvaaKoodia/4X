@@ -11,6 +11,7 @@ public class WorldMain : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		Data=new WorldData();
+		Data.world_main=this;
 	}
 	
 	// Update is called once per frame
@@ -24,9 +25,9 @@ public class WorldMain : MonoBehaviour {
 		List<ShipData> remove_list=new List<ShipData>();
 		
 		foreach(var s in Data.Ships){
-			//if (s.MovingOut()){
-			//createShip(s);	
-			//}
+			if (s.AI&&s.Moving&&s.ShipObj()==null){
+				createShip(s);	
+			}
 			if (s.StoppedMoving()){
 				removeShip(s);
 			}
@@ -52,6 +53,7 @@ public class WorldMain : MonoBehaviour {
 	}
 	public void removeShip(ShipData s){
 		var sm=s.ShipObj();
+		if (sm==null) return;
 		ships.Remove(sm);
 		s.ShipObj(null);
 		Destroy(sm.gameObject);

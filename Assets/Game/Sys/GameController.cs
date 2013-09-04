@@ -18,7 +18,6 @@ public class GameController : MonoBehaviour {
 			selected_ship=value;
 		}
 	}
-	
 	ShipData selected_ship;
 	
 	NodeMain selected_node=null;

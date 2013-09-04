@@ -12,6 +12,8 @@ public class WorldData{
 	
 	public int Turn{get;private set;}
 	
+	public WorldMain world_main;
+	
 	// Use this for initialization
 	public WorldData(){
 		Turn=1;
@@ -32,17 +34,28 @@ public class WorldData{
 			i++;
 			Nodes.Add(data);
 		}
-		//factions
-		var pf=new FactionData("Player Faction",false);
+
+		//player faction
+		var pf=new FactionData("Player Faction",false,this);
+		player_faction=pf;
 		Factions.Add(pf);
-		
-		//create colonies
+	
 		var pn=Nodes[Subs.GetRandom(Nodes.Count)];
 		var pc=new ColonyData(this,pf,pn,true);
 		
 		pn.SetColony(pc);
 		
-		player_faction=pf;
+		//other factions
+		pf=new FactionData("Other Faction",true,this);
+		Factions.Add(pf);
+		
+		while(pn.HasColony()){
+			pn=Nodes[Subs.GetRandom(Nodes.Count)];
+		}
+		pc=new ColonyData(this,pf,pn,true);
+		
+		pn.SetColony(pc);
+		
 	}
 
 	public void Update() {
@@ -63,9 +76,7 @@ public class WorldData{
 	public void RemoveShip (ShipData s)
 	{
 		Ships.Remove(s);
-		if (s.Orbit!=null){
-			s.Orbit.Ships.Remove(s);
-		}
+		s.Destroy();
 	}
 	
 }

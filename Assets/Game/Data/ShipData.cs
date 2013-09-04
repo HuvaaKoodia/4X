@@ -10,21 +10,24 @@ public class ShipData{
 	
 	ShipMain ship_obj;
 	
+	public bool AI{get{return Faction.AI;}}
+	
 	public ShipData(NodeData orbit,FactionData f){
 		ship_number++;
 		Name="Ship "+ship_number;
 		on_orbit=orbit;
 		Faction=f;
+		f.Ships.Add(this);
 	}
 	
 	public void Update(){
 		//fuel?
-		if (moving){
+		if (Moving){
 			LeaveOrbit();
 			position+=direction*speed;
 			travel_length-=speed;
 			if (travel_length<=0){
-				moving=false;
+				Moving=false;
 				EnterOrbit(target);
 			}
 		}
@@ -33,7 +36,7 @@ public class ShipData{
 	
 	public Vector3 Position{
 		get{
-			if (moving){
+			if (Moving){
 				return position;
 			}
 			return on_orbit.Node.transform.position;
@@ -56,6 +59,8 @@ public class ShipData{
 	public bool MovingOut(){
 		return moving_out;
 	}
+	public bool Moving{get;private set;}
+	
 	public bool StoppedMoving(){
 		if (moving_stop){
 			moving_stop=false;
@@ -67,18 +72,17 @@ public class ShipData{
 	NodeData on_orbit,origin,target;
 	float speed=1.34f,travel_length;
 	Vector3 position,direction;
-	bool moving;
 	
 	public void setMovement(NodeData target){
 		this.target=target;
 		if (target==null){
 			//cancel move
-			moving=moving_out=false;
+			Moving=moving_out=false;
 			return;
 		}
 		origin=on_orbit;
 		
-		moving=moving_out=true;
+		Moving=moving_out=true;
 		
 		Vector3 pos=origin.Node.transform.position,tpos=target.Node.transform.position;
 		var dock_dis=1.5f;
@@ -105,6 +109,10 @@ public class ShipData{
 		on_orbit=node;
 		on_orbit.Ships.Add(this);
 		moving_stop=true;
+		
+		if (AI){
+			//Faction.
+		}
 	}
 	
 	public NodeData Orbit{get{return on_orbit;}}
@@ -125,5 +133,13 @@ public class ShipData{
 	public void ColonizePlanet()
 	{
 		colonize_next_turn=true;
+	}
+
+	public void Destroy ()
+	{
+		if (Orbit!=null){
+			Orbit.Ships.Remove(this);
+		}
+		Faction.Ships.Remove(this);
 	}
 }
