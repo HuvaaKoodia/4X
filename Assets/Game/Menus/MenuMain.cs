@@ -42,7 +42,7 @@ public class MenuMain : MonoBehaviour {
 				ship_panel.gameObject.SetActive(false);
 			}
 			
-			if (node.Data.HasColony()){
+			if (node.Data.HasColony()&&!node.Data.Colony.Faction.AI){
 				colony_actions.gameObject.SetActive(true);
 				colony_actions.setColony(node.Data.Colony);
 			}
@@ -58,7 +58,7 @@ public class MenuMain : MonoBehaviour {
 		node_panel.UpdateHud();
 		world.UpdateHud();
 		
-		game_controller.SelectedShip=null;
+		game_controller.ClearSelectedShips();
 	}
 	
 	public void UpdateShipPanel(){

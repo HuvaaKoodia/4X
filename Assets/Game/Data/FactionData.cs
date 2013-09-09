@@ -14,6 +14,7 @@ public class FactionData{
 	public Color Color_{get;private set;}
 	
 	public int ShipCost{get{return 10;}}//dev temp
+	public int ShipNumber=1;
 	
 	FactionAI AI_c;
 	
@@ -44,10 +45,6 @@ public class FactionData{
 	{
 		if (CapitalColony==null) CapitalColony=pc;
 		Colonies.Add(pc);
-	}
-	
-	public void AddShip(){
-		
 	}
 	
 	public void RemoveShip(ShipData ship){

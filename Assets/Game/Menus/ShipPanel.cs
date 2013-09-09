@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ShipPanel : MonoBehaviour {
 	
@@ -9,17 +10,13 @@ public class ShipPanel : MonoBehaviour {
 	public UIDraggablePanel drag_panel;
 	
 	NodeData _node;
+	List<ShipItem> items=new List<ShipItem>();
 	
 	// Use this for initialization
 	void Start () {
 		ship_actions_panel.gameObject.SetActive(false);
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
 	public void setNode (NodeData node)
 	{
 		_node=node;
@@ -29,15 +26,18 @@ public class ShipPanel : MonoBehaviour {
 	public void UpdateHud(){
 		if (!gameObject.activeSelf) return;
 		
-		if (Menu.game_controller.SelectedShip==null)
-			ship_actions_panel.gameObject.SetActive(false);
+		//if (Menu.game_controller.HasSelectedShips())
+		//	ship_actions_panel.gameObject.SetActive(false);
 		
 		int c=Contents.transform.childCount;
+		items.Clear();
 		for(int i=0;i<c;i++){
 			Transform t = Contents.transform.GetChild(0);
 			DestroyImmediate(t.gameObject);
 		}
 		
+		int a=0;
+		int selected_a=0;
 		foreach(var s in _node.Ships){
 			if (s.Faction.AI) continue;
 			var si=Instantiate(ShipItem_prefab,Vector3.zero,Quaternion.identity) as GameObject;
@@ -48,28 +48,90 @@ public class ShipPanel : MonoBehaviour {
 			si.transform.parent=Contents.transform;
 			si.transform.localPosition=new Vector3(0,0,-1);
 			si.transform.localScale=Vector3.one;
+			a++;
+			
+			if (Menu.game_controller.IsSelected(s)){
+				sid.Selected=true;
+				selected_a++;
+			}
+			items.Add(sid);
 		}
+		
 		Contents.GetComponent<UIGrid>().Reposition();
+		
+		if (a==0){
+			gameObject.SetActive(false);
+			return;
+		}
+		
+		if (selected_a!=selected_amount){
+			UpdateShipActions();
+			selected_amount=selected_a;
+		}
 		
 		if (_node.Ships.Count==0)
 			drag_panel.ResetPosition();
 	}
 	
-	public void MoveShip(ShipData ship){
-		Menu.game_controller.SelectedShip=ship;
-	}
-	public void ColonizePlanet(ShipData ship){
-		ship.ColonizePlanet();
-		Menu.UpdateShipPanel();
-	}
-
-	public void SetSelectedShip (ShipData ship)
-	{
-		ship_actions_panel.gameObject.SetActive(true);
-		ship_actions_panel.setShip(ship);
+	public void UpdateShipActions(){
+		List<ShipData> sels=new List<ShipData>();
+		
+		foreach(var s in _node.Ships){
+			if (s.Faction.AI) continue;
+	
+			if (Menu.game_controller.IsSelected(s)){
+				sels.Add(s);
+			}
+		}
+		
+		if (sels.Count>0){
+			ship_actions_panel.gameObject.SetActive(true);
+			ship_actions_panel.setShips(sels);
+		}
+		else{
+			ship_actions_panel.gameObject.SetActive(false);
+		}
 	}
 	
-	public void OnEnable(){
+	public void MoveCommand(){
+		//DEV. turn on move mode in game controller.
+	}
+	
+	public void ColonizeCommand(ShipData ship){
+		bool current=ship.ColonizingPlanet;
 		
+		foreach (var s in _node.Ships){
+			if (!s.Faction.AI){
+				s.ColonizePlanet(false);
+			}
+		}
+
+		ship.ColonizePlanet(!current);
+		UpdateHud();
+	}
+	
+	int selected_amount=0;
+	
+	public void AddSelectedShip (ShipData ship)
+	{
+		if (InputHandler.GetControl()||InputHandler.GetShift()){
+			Menu.game_controller.AddSelectedShip(ship);
+		}
+		else{
+			Menu.game_controller.SetSelectedShip(ship);
+			
+			foreach (var i in items){
+				if (i.Ship!=ship)
+					i.Selected=false;
+			}
+		}
+		UpdateShipActions();
+	}
+
+	public void RemoveSelectedShip (ShipData ship)
+	{
+		Menu.game_controller.RemoveSelectedShip(ship);
+		
+		UpdateShipActions();
 	}
 }

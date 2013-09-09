@@ -10,14 +10,10 @@ public class NodeMain : MonoBehaviour {
 	public UILabel ship_amount_label;
 	
 	// Use this for initialization
-	void Start () {
-	
-	}
+	void Start () {}
 	
 	// Update is called once per frame
-	void Update () {
-		
-	}
+	void Update () {}
 	
 	public void ChangeColor(Color c){
 		Subs.ChangeColor(graphics.transform,c);
@@ -37,8 +33,19 @@ public class NodeMain : MonoBehaviour {
 	
 	public void UpdateHud(){
 		string number="";
-		if (Data.Ships.Count>0){
-			number+=Data.Ships.Count;
+		Dictionary<FactionData,int> ships=new Dictionary<FactionData, int>();
+		foreach (var s in Data.Ships){
+			if (ships.ContainsKey(s.Faction)){
+				ships[s.Faction]++;
+			}
+			else{
+				ships.Add(s.Faction,1);
+			}
+		}
+		if (ships.Count!=0){
+			foreach(var n in ships){
+				number+="["+Subs.ColorToHex(n.Key.Color_)+"]"+n.Value+"\n";
+			}
 		}
 		ship_amount_label.text=number;
 	}

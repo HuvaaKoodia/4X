@@ -10,15 +10,7 @@ public class GameController : MonoBehaviour {
 	public MenuMain Menu;
 	public GameObject node_selection_circle,camera_selection_circle;
 	
-	public ShipData SelectedShip{
-		get{
-			return selected_ship;
-		}
-		set{
-			selected_ship=value;
-		}
-	}
-	ShipData selected_ship;
+	List<ShipData> selected_ships;
 	
 	NodeMain selected_node=null;
 	Timer left_double_timer;
@@ -26,6 +18,8 @@ public class GameController : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		selected_ships=new List<ShipData>();
+		
 		left_double_timer=new Timer(250,OnLeftDoubleClick);
 		
 		var n=world_main.Data.player_faction.CapitalColony.Node.Node;
@@ -33,6 +27,8 @@ public class GameController : MonoBehaviour {
 		SelectNode(n);
 		
 		Menu.UpdateHud();
+		
+		
 	}
 
 	// Update is called once per frame
@@ -70,23 +66,27 @@ public class GameController : MonoBehaviour {
 			var node=RaycastNode();
 			
 			if (node!=null){
-				if (selected_ship!=null){
-					if (node.Data!=selected_ship.Orbit){
-						if (selected_ship.MoveTarget!=null){
-							selected_ship.setMovement(null);
-							world_main.removeShip(selected_ship);
+				bool update_hud=false;
+				foreach(var s in selected_ships){
+					if (node.Data!=s.Orbit){
+						if (s.MoveTarget!=null){
+							s.setMovement(null);
+							world_main.removeShip(s);
 						}
 						//move
-						selected_ship.setMovement(node.Data);
-						world_main.createShip(selected_ship);
+						s.setMovement(node.Data);
+						world_main.createShip(s);
 					}else{
 						//cancel move
-						selected_ship.setMovement(null);
-						world_main.removeShip(selected_ship);
+						s.setMovement(null);
+						world_main.removeShip(s);
 					}
-				Menu.UpdateShipPanel();
+					update_hud=true;
 				}
-				//selected_node.Link(node);
+				
+				if (update_hud){
+					Menu.UpdateShipPanel();
+				}
 			}
 		}
 	}
@@ -105,16 +105,20 @@ public class GameController : MonoBehaviour {
 		selected_node=null;
 		node_selection_circle.SetActive(false);
 		Menu.SetNodePanel(null);
+		ClearSelectedShips();
 	}
 
 	void SelectNode (NodeMain node)
 	{
+		if (selected_node==node) return;
 		//DeselectNode();
 		selected_node=node;
 		//set hud
 		Menu.SetNodePanel(node);
 		node_selection_circle.SetActive(true);
 		node_selection_circle.transform.position=node.transform.position;
+		
+		ClearSelectedShips();
 	}
 
 	void setCameraTarget (NodeMain node)
@@ -131,5 +135,40 @@ public class GameController : MonoBehaviour {
 		left_double_timer.Active=false;
 		left_double_timer.Reset();
 		is_left_double=false;
+	}
+
+	public bool HasSelectedShips ()
+	{
+		return selected_ships.Count>0;
+	}
+
+	public void ClearSelectedShips ()
+	{
+		selected_ships.Clear();
+	}
+
+	public void AddSelectedShip (ShipData ship)
+	{
+		if (!selected_ships.Contains(ship)){
+			selected_ships.Add(ship);
+			//Menu.UpdateShipPanel();
+		}
+	}
+
+	public void RemoveSelectedShip (ShipData ship)
+	{
+		selected_ships.Remove(ship);
+		//Menu.UpdateShipPanel();
+	}
+
+	public bool IsSelected (ShipData s)
+	{
+		return selected_ships.Contains(s);
+	}
+
+	public void SetSelectedShip (ShipData ship)
+	{
+		ClearSelectedShips();
+		AddSelectedShip(ship);
 	}
 }

@@ -32,8 +32,14 @@ public class WorldMain : MonoBehaviour {
 				removeShip(s);
 			}
 			if (s.ColonizingPlanet){
-				remove_list.Add(s);
-				s.Orbit.SetColony(new ColonyData(Data,s.Faction,s.Orbit,false));
+				if (s.Orbit.HasColony()){
+					//some one took it first. DEV. check for this in before hand. Conflict or diplomatic solution
+					s.ColonizePlanet(false);
+				}
+				else{
+					remove_list.Add(s);
+					s.Orbit.SetColony(new ColonyData(Data,s.Faction,s.Orbit,false));
+				}
 			}
 		}
 		foreach (var s in remove_list){
@@ -48,7 +54,7 @@ public class WorldMain : MonoBehaviour {
 	public void createShip(ShipData s){
 		var so=Instantiate(ship_prefab,s.Position,Quaternion.identity) as GameObject;
 		var sm=so.GetComponent<ShipMain>();
-		sm.SetData(s);
+		sm.SetData(s,this);
 		ships.Add(sm);
 	}
 	public void removeShip(ShipData s){

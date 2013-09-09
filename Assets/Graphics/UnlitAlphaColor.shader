@@ -4,8 +4,9 @@
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 	}
 	SubShader {
-		Tags { "RenderType"="Transparent" "Queue"="Transparent" }
+		Tags { "RenderType"="Opaque" "Queue"="Transparent" }
 		LOD 200
+		ZWrite On
 		
 		CGPROGRAM
 		#pragma surface surf NoLighting alpha 

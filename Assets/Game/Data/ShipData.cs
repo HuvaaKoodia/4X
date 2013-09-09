@@ -2,9 +2,6 @@
 using System.Collections;
 
 public class ShipData{
-	
-	public static int ship_number;//DEV.temp
-	
 	public string Name{get;private set;}
 	public FactionData Faction{get;private set;}
 	
@@ -13,8 +10,9 @@ public class ShipData{
 	public bool AI{get{return Faction.AI;}}
 	
 	public ShipData(NodeData orbit,FactionData f){
-		ship_number++;
-		Name="Ship "+ship_number;
+		Name="Ship "+f.ShipNumber;
+		f.ShipNumber++;
+		
 		on_orbit=orbit;
 		Faction=f;
 		f.Ships.Add(this);
@@ -80,6 +78,7 @@ public class ShipData{
 			Moving=moving_out=false;
 			return;
 		}
+		ColonizePlanet(false);
 		origin=on_orbit;
 		
 		Moving=moving_out=true;
@@ -130,9 +129,14 @@ public class ShipData{
 	
 	bool colonize_next_turn=false;
 	
-	public void ColonizePlanet()
+	public void ColonizePlanet(bool on)
 	{
-		colonize_next_turn=true;
+		colonize_next_turn=on;
+		if (on){
+		setMovement(null);
+		if (ship_obj!=null)
+			ship_obj.RemoveFromWorld();
+		}
 	}
 
 	public void Destroy ()

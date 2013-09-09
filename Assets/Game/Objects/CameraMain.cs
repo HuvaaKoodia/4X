@@ -32,8 +32,12 @@ public class CameraMain: MonoBehaviour {
 		
 		var sw=Input.GetAxis("Mouse ScrollWheel");
 		if (sw!=0){
+			float multi=1f;
+			if (Input.GetKey(KeyCode.LeftShift)){
+				multi=3f;
+			}
 			if (!toggle_zooming){
-				setDistanceMulti(-sw*scroll_speed);
+				setDistanceMulti(-sw*scroll_speed*multi);
 				if (new_distance>saved_distance){
 					distance_toggled=false;
 				}

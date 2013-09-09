@@ -36,7 +36,7 @@ public class FactionAI {
 			if (!s.Moving){
 				//colonize
 				if (s.Orbit!=null&&!s.Orbit.HasColony()){
-					s.ColonizePlanet();
+					s.ColonizePlanet(true);
 				}
 				
 				//move to colonize

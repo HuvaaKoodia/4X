@@ -145,6 +145,12 @@ public class Subs{
 		}
 	}
 	
+	public static string ColorToHex(Color32 color)
+	{
+		return color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2");
+		
+	}
+	
 	
 	//POINT
 	/*public struct Point

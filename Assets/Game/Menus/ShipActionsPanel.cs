@@ -1,40 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ShipActionsPanel : MonoBehaviour {
 	
 	public ShipPanel ship_panel;
 	public GameObject move_button,colonize_button;
 	
-	
-	ShipData _ship;
+	List<ShipData> _ships=new List<ShipData>();
 	
 	// Use this for initialization
-	void Start () {
-	
-	}
+	void Start () {}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () {}
 	
-	}
-	
-	public void setShip(ShipData ship){
-		_ship=ship;
+	public void setShips(List<ShipData> selected_ships){
+		_ships=selected_ships;
+		//DEV. TEMP stuff
 		
+		var ship=_ships[0];
+		
+		colonize_button.SetActive(false);
 		if (ship.Orbit.Colony==null){
-			colonize_button.SetActive(true);
-		}
-		else{
-			colonize_button.SetActive(false);
+			if (_ships.Count==1)
+				colonize_button.SetActive(true);
 		}
 	}
 		
 	public void MovePressed(){
-		ship_panel.MoveShip(_ship);
+		ship_panel.MoveCommand();
 	}
 	
 	public void ColonizePressed(){
-		ship_panel.ColonizePlanet(_ship);
+		ship_panel.ColonizeCommand(_ships[0]);
 	}
 }
