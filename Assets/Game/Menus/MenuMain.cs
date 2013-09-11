@@ -12,9 +12,19 @@ public class MenuMain : MonoBehaviour {
 	
 	NodeMain _node;
 	
+	public static void SetSelected(bool selected,UIButton B,UISprite BG){
+		if (selected){
+			B.defaultColor=B.hover=B.pressed=BG.color=Color.red;
+			B.UpdateColor(true,true);
+		}
+		else{
+			B.defaultColor=B.hover=B.pressed=BG.color=Color.white;
+			B.UpdateColor(true,true);
+		}
+	}
+	
 	// Use this for initialization
 	void Start () {
-		//SetNodePanel(null);
 		turn_label.text="Turn 1";
 	}
 	

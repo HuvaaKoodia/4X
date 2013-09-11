@@ -26,9 +26,6 @@ public class ShipPanel : MonoBehaviour {
 	public void UpdateHud(){
 		if (!gameObject.activeSelf) return;
 		
-		//if (Menu.game_controller.HasSelectedShips())
-		//	ship_actions_panel.gameObject.SetActive(false);
-		
 		int c=Contents.transform.childCount;
 		items.Clear();
 		for(int i=0;i<c;i++){
@@ -112,26 +109,46 @@ public class ShipPanel : MonoBehaviour {
 	
 	int selected_amount=0;
 	
-	public void AddSelectedShip (ShipData ship)
+	public void AddSelectedShip (ShipItem item)
 	{
 		if (InputHandler.GetControl()||InputHandler.GetShift()){
-			Menu.game_controller.AddSelectedShip(ship);
+			Menu.game_controller.AddSelectedShip(item.Ship);
 		}
 		else{
-			Menu.game_controller.SetSelectedShip(ship);
+			Menu.game_controller.SetSelectedShip(item.Ship);
 			
 			foreach (var i in items){
-				if (i.Ship!=ship)
+				if (i.Ship!=item.Ship)
 					i.Selected=false;
 			}
 		}
 		UpdateShipActions();
 	}
 
-	public void RemoveSelectedShip (ShipData ship)
+	public void RemoveSelectedShip (ShipItem item)
 	{
-		Menu.game_controller.RemoveSelectedShip(ship);
-		
+		if (InputHandler.GetControl()||InputHandler.GetShift()){
+			Menu.game_controller.RemoveSelectedShip(item.Ship);
+		}
+		else{
+			Menu.game_controller.SetSelectedShip(item.Ship);
+			item.Selected=true;
+			
+			foreach (var i in items){
+				if (i.Ship!=item.Ship)
+					i.Selected=false;
+			}
+		}
 		UpdateShipActions();
+	}
+
+	public void RemoveSelectedBuildItem (BuildItem item)
+	{
+		throw new System.NotImplementedException ();
+	}
+
+	public void AddSelectedBuildItem (BuildItem item)
+	{
+		throw new System.NotImplementedException ();
 	}
 }

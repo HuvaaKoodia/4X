@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ShipItem : MonoBehaviour {
+public class BuildItem : MonoBehaviour{
 	
-	public UILabel name_label,action_label;
+	public UILabel name_label,time_label;
 	public UISprite background_spr;
 	public ShipPanel ship_panel;
 	public UIButton This;
 	
-	ShipData _ship;
+	ShipData _ship;//DEV.Temp build item
 	
 	public ShipData Ship{get{return _ship;}}
 	
@@ -20,26 +20,23 @@ public class ShipItem : MonoBehaviour {
 			MenuMain.SetSelected(value,This,background_spr);
 	}}
 
-	public void setShip(ShipData ship){
+	public void setBuildItem(ShipData ship){
 		_ship=ship;
 		name_label.text=ship.Name;
-		string action="";
-		if (ship.MovingOut()){
-			action="Moving";
-		}
-		if (ship.ColonizingPlanet){
-			action="Colonizing";
-		}
-		action_label.text=action;
+		time_label.text="5 turns.";
+	}
+	
+	void UpdateHud(){
+		
 	}
 	
 	void OnClick(){
 		Selected=!selected;
 		if (!selected){
-			ship_panel.RemoveSelectedShip(this);
+			ship_panel.RemoveSelectedBuildItem(this);
 		}
 		else{
-			ship_panel.AddSelectedShip(this);
+			ship_panel.AddSelectedBuildItem(this);
 		}
 	}
 }

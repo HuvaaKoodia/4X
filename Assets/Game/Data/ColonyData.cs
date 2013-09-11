@@ -9,6 +9,8 @@ public class ColonyData{
 	public NodeData Node{get;private set;}
 	public FactionData Faction{get;private set;}
 	
+	public List<BuildItemData> BuildItems{get;private set;}
+	
 	public int Energy{
 		get{return energy;}
 		set{energy=Mathf.Clamp(value,0,energy_max);}
@@ -36,6 +38,7 @@ public class ColonyData{
 		setFaction(f);
 		
 		world=w;
+		BuildItemData=new List<BuildItemData>();
 		
 		//Ships=new List<ShipData>();
 		if (first_colony){
@@ -65,8 +68,16 @@ public class ColonyData{
 		}
 		
 		
+		
 		//production
-		//DEV.IMP
+		if (BuildItems.Count>0){
+			BuildItems[0].Build(Industry);
+			
+			if (BuildItems[0].Ready){
+				CreateShip();
+				BuildItems.Remove(0);
+			}
+		}
 		
 		//energy generation
 		Energy+=energy_recharge;
@@ -74,13 +85,13 @@ public class ColonyData{
 
 	public void BuildShip ()
 	{
-		var ship_cost=Faction.ShipCost;
-		if (Energy>=ship_cost){
-			Energy-=ship_cost;
-			var s=new ShipData(Node,Faction);
-			Node.Ships.Add(s);
-			world.createShip(s);
-		}
+		BuildItems.Add(new BuildItemData(100));
+	}
+	
+	public void CreateShip(){
+		var s=new ShipData(Node,Faction);
+		Node.Ships.Add(s);
+		world.createShip(s);
 	}
 
 	/*
