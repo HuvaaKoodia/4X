@@ -6,19 +6,11 @@ public class ColonyActionsPanel : MonoBehaviour {
 	public ColonyData Colony{get;private set;}
 	public MenuMain main_menu;
 	public UILabel BuildShipLabel;
-	
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+	public ShipPanel Ship_panel;
 	
 	void BuildButton(){
 		Colony.BuildShip();
+		Ship_panel.BuildPressed();
 		main_menu.UpdateHud();
 	}
 

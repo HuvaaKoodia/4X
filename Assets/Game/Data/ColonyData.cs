@@ -38,7 +38,7 @@ public class ColonyData{
 		setFaction(f);
 		
 		world=w;
-		BuildItemData=new List<BuildItemData>();
+		BuildItems=new List<BuildItemData>();
 		
 		//Ships=new List<ShipData>();
 		if (first_colony){
@@ -71,11 +71,12 @@ public class ColonyData{
 		
 		//production
 		if (BuildItems.Count>0){
-			BuildItems[0].Build(Industry);
+			var spent=BuildItems[0].Build(Industry);
+			Node.Matter-=spent;
 			
 			if (BuildItems[0].Ready){
 				CreateShip();
-				BuildItems.Remove(0);
+				BuildItems.RemoveAt(0);
 			}
 		}
 		
@@ -85,7 +86,7 @@ public class ColonyData{
 
 	public void BuildShip ()
 	{
-		BuildItems.Add(new BuildItemData(100));
+		BuildItems.Add(new BuildItemData(this,100));
 	}
 	
 	public void CreateShip(){

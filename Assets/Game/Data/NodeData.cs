@@ -40,4 +40,11 @@ public class NodeData{
 	{
 		return Ships.Count>0;
 	}
+
+	public bool hasBuilds ()
+	{
+		if (!HasColony())
+			return false;
+		return Colony.BuildItems.Count>0;
+	}
 }

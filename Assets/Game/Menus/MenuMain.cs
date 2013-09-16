@@ -38,19 +38,12 @@ public class MenuMain : MonoBehaviour {
 		if (node==null){
 			node_panel.gameObject.SetActive(false);
 			colony_actions.gameObject.SetActive(false);
-			ship_panel.gameObject.SetActive(false);
+			ship_panel.setNode(null);
 		}
 		else{
 			node_panel.gameObject.SetActive(true);
 			node_panel.SetNode(node);
-			
-			if (node.Data.hasShips()){
-				ship_panel.gameObject.SetActive(true);
-				ship_panel.setNode(node.Data);
-			}
-			else{
-				ship_panel.gameObject.SetActive(false);
-			}
+			ship_panel.setNode(node.Data);
 			
 			if (node.Data.HasColony()&&!node.Data.Colony.Faction.AI){
 				colony_actions.gameObject.SetActive(true);

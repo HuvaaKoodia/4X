@@ -8,9 +8,9 @@ public class BuildItem : MonoBehaviour{
 	public ShipPanel ship_panel;
 	public UIButton This;
 	
-	ShipData _ship;//DEV.Temp build item
+	BuildItemData _item;
 	
-	public ShipData Ship{get{return _ship;}}
+	public BuildItemData Item{get{return _item;}}
 	
 	bool selected=false;
 	
@@ -19,11 +19,11 @@ public class BuildItem : MonoBehaviour{
 			selected=value;
 			MenuMain.SetSelected(value,This,background_spr);
 	}}
-
-	public void setBuildItem(ShipData ship){
-		_ship=ship;
-		name_label.text=ship.Name;
-		time_label.text="5 turns.";
+	
+	public void setBuildItem(BuildItemData item){
+		_item=item;
+		name_label.text="Ship.";
+		time_label.text=item.TurnsLeft+" turns.";
 	}
 	
 	void UpdateHud(){

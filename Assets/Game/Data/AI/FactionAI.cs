@@ -24,12 +24,13 @@ public class FactionAI {
 	//DEV:TEMP
 	public void Update ()
 	{
-
 		//buying ships
 		foreach(var c in faction.Colonies){
-			while(c.Energy>faction.ShipCost){
+			//while(c.Energy>faction.ShipCost){
+			//	c.BuildShip();
+			//}
+			if (c.BuildItems.Count==0)
 				c.BuildShip();
-			}
 		}
 		//order ships around
 		foreach(var s in faction.Ships){
