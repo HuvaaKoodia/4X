@@ -15,6 +15,8 @@ public class ShipPanel : MonoBehaviour {
 	List<ShipItem> items=new List<ShipItem>();
 	List<BuildItem> b_items=new List<BuildItem>();
 	
+	List<BuildItem> selected_b_items=new List<BuildItem>();
+	
 	QueueType type=QueueType.Ships;
 	
 	// Use this for initialization
@@ -28,6 +30,8 @@ public class ShipPanel : MonoBehaviour {
 			_node=null;
 			TabButtons.SetActive(false);
 			DataPanel.SetActive(false);
+			ship_actions_panel.gameObject.SetActive(false);
+			drag_panel.ResetPosition();
 			return;
 		}
 		TabButtons.SetActive(true);
@@ -38,15 +42,21 @@ public class ShipPanel : MonoBehaviour {
 	public void UpdateHud(){
 		if (!gameObject.activeSelf) return;
 	
+		Debug.Log("UPDATED!");
+		
 		int c=Contents.transform.childCount;
 		items.Clear();
+		b_items.Clear();
 		for(int i=0;i<c;i++){
 			Transform t = Contents.transform.GetChild(0);
 			DestroyImmediate(t.gameObject);
 		}
+
 		int a=0;
 		int selected_a=0;
 		if (type==QueueType.Ships&&_node.hasShips()){
+			
+			DataPanel.SetActive(true);
 			
 			foreach(var s in _node.Ships){
 				if (s.Faction.AI) continue;
@@ -58,7 +68,6 @@ public class ShipPanel : MonoBehaviour {
 				si.transform.parent=Contents.transform;
 				si.transform.localPosition=new Vector3(0,0,-1);
 				si.transform.localScale=Vector3.one;
-				
 				
 				if (Menu.game_controller.IsSelected(s)){
 					sid.Selected=true;
@@ -74,6 +83,8 @@ public class ShipPanel : MonoBehaviour {
 			}
 		}
 		else if (type==QueueType.Builds&&_node.hasBuilds()){
+			DataPanel.SetActive(true);
+			
 			if (_node.HasColony()&&!_node.Colony.Faction.AI){
 				foreach(var b in _node.Colony.BuildItems){
 					var go=Instantiate(BuildItem_prefab,Vector3.zero,Quaternion.identity) as GameObject;
@@ -93,18 +104,24 @@ public class ShipPanel : MonoBehaviour {
 					a++;
 				}
 			}
+			UpdateShipActions();
 		}
 		else{
-			drag_panel.ResetPosition();
 			DataPanel.SetActive(false);
+			UpdateShipActions();
 		}
 		
+		drag_panel.ResetPosition();
 		Contents.GetComponent<UIGrid>().Reposition();
+		
+		Debug.Log("BuildItems: "+b_items.Count);
 		
 		if (a>0){
 			DataPanel.SetActive(true);
 			return;
 		}
+		
+		
 	}
 	
 	public void UpdateShipActions(){
@@ -159,7 +176,9 @@ public class ShipPanel : MonoBehaviour {
 					i.Selected=false;
 			}
 		}
-		UpdateShipActions();
+		//UpdateShipActions();
+		
+		UpdateHud();
 	}
 
 	public void RemoveSelectedShip (ShipItem item)
@@ -172,21 +191,54 @@ public class ShipPanel : MonoBehaviour {
 			item.Selected=true;
 			
 			foreach (var i in items){
-				if (i.Ship!=item.Ship)
-					i.Selected=false;
+				i.Selected=false;
 			}
 		}
-		UpdateShipActions();
+		//UpdateShipActions();
+	
+		//UpdateHud();
 	}
 
 	public void RemoveSelectedBuildItem (BuildItem item)
 	{
-		throw new System.NotImplementedException ();
+		if (InputHandler.GetControl()||InputHandler.GetShift()){
+			_RemoveSelectedBuildItem(item);
+		}
+		else{
+			_SetSelectedBuildItem(item);
+		}
 	}
-
+	
 	public void AddSelectedBuildItem (BuildItem item)
 	{
-		throw new System.NotImplementedException ();
+		if (InputHandler.GetControl()||InputHandler.GetShift()){
+			_AddSelectedBuildItem(item);
+		}
+		else{
+			_SetSelectedBuildItem(item);
+		}
+	}
+	
+	private void _DeselectBuildItems(BuildItem item){
+		foreach (var i in b_items){
+			if (i!=item)
+				i.Selected=false;
+		}
+	}
+	
+	private void _AddSelectedBuildItem(BuildItem item){
+		//item.Selected=true;
+		selected_b_items.Add(item);
+	}
+	
+	private void _RemoveSelectedBuildItem(BuildItem item){
+		//item.Selected=false;
+		selected_b_items.Remove(item);
+	}
+	
+	private void _SetSelectedBuildItem(BuildItem item){
+		_DeselectBuildItems(item);
+		_AddSelectedBuildItem(item);
 	}
 	
 	public void SetState(QueueType type){

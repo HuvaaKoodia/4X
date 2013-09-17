@@ -151,14 +151,14 @@ public class GameController : MonoBehaviour {
 	{
 		if (!selected_ships.Contains(ship)){
 			selected_ships.Add(ship);
-			//Menu.UpdateShipPanel();
+			Menu.UpdateShipPanel();
 		}
 	}
 
 	public void RemoveSelectedShip (ShipData ship)
 	{
 		selected_ships.Remove(ship);
-		//Menu.UpdateShipPanel();
+		Menu.UpdateShipPanel();
 	}
 
 	public bool IsSelected (ShipData s)
