@@ -1,4 +1,5 @@
 4X
 ==
 
-Lil' 4X game.
+A 4X game interface prototype.
+Borrows heavily from Sword of the stars.
